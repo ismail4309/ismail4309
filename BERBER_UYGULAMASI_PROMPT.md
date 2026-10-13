@@ -174,58 +174,204 @@ Sık kullanılan sorgular için indeksler: (salon_id, başlangıç), (staff_id, 
 
 ---
 
-## TASARIM SİSTEMİ — Kurumsal, Sade, Apple Tarzı
+## TASARIM — KESİN KURALLAR
 
-**İlham:** apple.com/tr — bol beyaz alan, net tipografi, az renk, içeriği öne çıkaran düzen. Hedef his: güvenilir, sakin, profesyonel.
+Bu bölüm önerilerden oluşmuyor; hepsi zorunlu. Amaç: uygulama apple.com/tr, bir banka uygulaması ya da iOS'un kendi Takvim ve Ayarlar ekranları gibi görünsün. "Yapay zekâyla yapılmış bir SaaS şablonu" gibi görünmesin. Emin olmadığın her durumda daha sade, daha az renkli, daha az süslü olanı seç.
 
-**KESİNLİKLE YAPMA (yapay zekâ / "AI ürünü" görünümü):**
-- Mor, pembe, neon, turkuaz tonları; mor-mavi **gradyanlar**; parlayan (glow) efektler
-- Glassmorphism, bulanık arka plan blob'ları, parıltı/yıldız ✨ ikonları
-- Arayüzde emoji kullanımı
-- Her köşede aşırı yuvarlak "baloncuk" kartlar, abartılı gölgeler
-- Gereksiz animasyon; zıplayan, dönen öğeler
-- "Yapay zekâ destekli", "akıllı", "sihirli" gibi pazarlama dili
+### 1. Hazır stil dosyası — aynen kullan
 
-**Renk paleti (Tailwind tema token'ı olarak tanımla, başka renk kullanma):**
+Tasarım token'larını kendin uydurma. `app/globals.css` dosyasının başı birebir şu olacak:
 
-| Token | Açık tema | Koyu tema | Kullanım |
-|---|---|---|---|
-| `bg` | `#FFFFFF` | `#000000` | Sayfa zemini |
-| `bg-subtle` | `#F5F5F7` | `#1C1C1E` | Bölüm zemini, takvim ızgarası |
-| `surface` | `#FFFFFF` | `#1C1C1E` | Kart, panel |
-| `border` | `#D2D2D7` | `#38383A` | Ayırıcı çizgiler |
-| `text` | `#1D1D1F` | `#F5F5F7` | Ana metin |
-| `text-secondary` | `#6E6E73` | `#A1A1A6` | Açıklama, etiket |
-| `text-tertiary` | `#86868B` | `#8E8E93` | Pasif, ipucu |
-| `accent` | `#0071E3` | `#2997FF` | Birincil buton, bağlantı, seçili öğe |
-| `accent-hover` | `#0077ED` | `#47A8FF` | Hover |
-| `success` | `#1D7A3A` | `#30D158` | Onaylandı, tamamlandı |
-| `warning` | `#B25000` | `#FF9F0A` | Yaklaşan, dikkat |
-| `danger` | `#D70015` | `#FF453A` | İptal, hata, şu anki saat çizgisi |
+```css
+:root {
+  --bg: #FFFFFF;
+  --bg-subtle: #F5F5F7;
+  --surface: #FFFFFF;
+  --border: #D2D2D7;
+  --border-light: #E8E8ED;
+  --text: #1D1D1F;
+  --text-2: #6E6E73;
+  --text-3: #86868B;
+  --accent: #0071E3;
+  --accent-hover: #0077ED;
+  --success: #1D7A3A;
+  --warning: #B25000;
+  --danger: #D70015;
+  --radius-sm: 8px;
+  --radius: 12px;
+  --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #000000;
+    --bg-subtle: #1C1C1E;
+    --surface: #1C1C1E;
+    --border: #38383A;
+    --border-light: #2C2C2E;
+    --text: #F5F5F7;
+    --text-2: #A1A1A6;
+    --text-3: #8E8E93;
+    --accent: #2997FF;
+    --accent-hover: #47A8FF;
+    --success: #30D158;
+    --warning: #FF9F0A;
+    --danger: #FF453A;
+  }
+}
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 17px/1.47 var(--font);
+  letter-spacing: -0.022em;
+  -webkit-font-smoothing: antialiased;
+}
+.num { font-variant-numeric: tabular-nums; }
+```
 
-- Renk tek başına anlam taşımasın: durumlar renk + simge + metin ile gösterilsin.
-- Personel renk kodları da yalnızca bu düşük doygunluklu kurumsal setten: `#0071E3`, `#1D7A3A`, `#B25000`, `#6E6E73`, `#00627A`, `#8A5A00` — kartta sadece ince sol kenar çizgisi olarak.
-- Tüm metin/zemin kombinasyonları **WCAG AA** (≥ 4.5:1) kontrastını sağlamalı.
-- Koyu tema `prefers-color-scheme` ile otomatik, ayarlardan manuel seçilebilir.
+`tailwind.config.ts` içinde `theme.colors` objesini **tamamen bu değişkenlerle değiştir** (`extend` değil, override). Böylece `purple-500`, `indigo-600` gibi varsayılan renkler hiç olmasın:
 
-**Tipografi:**
-- Font yığını: `-apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif`
-- Ölçek: 12 / 14 / 17 (gövde) / 21 / 28 / 40 px. Başlıklar 600 ağırlık, gövde 400. Satır yüksekliği gövdede 1.47.
-- Saat ve sayılarda `font-variant-numeric: tabular-nums`.
+```ts
+colors: {
+  transparent: "transparent",
+  current: "currentColor",
+  white: "#FFFFFF",
+  black: "#000000",
+  bg: "var(--bg)",
+  subtle: "var(--bg-subtle)",
+  surface: "var(--surface)",
+  line: "var(--border)",
+  "line-light": "var(--border-light)",
+  ink: "var(--text)",
+  "ink-2": "var(--text-2)",
+  "ink-3": "var(--text-3)",
+  accent: "var(--accent)",
+  "accent-hover": "var(--accent-hover)",
+  success: "var(--success)",
+  warning: "var(--warning)",
+  danger: "var(--danger)",
+},
+borderRadius: { none: "0", sm: "8px", DEFAULT: "12px", full: "9999px" },
+boxShadow: { none: "none", sheet: "0 -1px 0 var(--border), 0 8px 32px rgba(0,0,0,0.12)" },
+fontFamily: { sans: ["var(--font)"] },
+```
 
-**Bileşen kuralları:**
-- Köşe yarıçapı: butonlar **980px (hap)** veya 12px, kartlar 18px, input'lar 12px. Tutarlı ol.
-- Gölge neredeyse yok; ayrımı `border` ve `bg-subtle` ile yap. Gerekirse tek gölge: `0 2px 12px rgba(0,0,0,0.06)`.
-- Birincil buton: `accent` zemin, beyaz metin. İkincil: şeffaf zemin, `accent` metin. Tehlikeli: `danger` metin, onay diyaloğu ile.
-- Boşluk ölçeği: 4'ün katları (4, 8, 12, 16, 24, 32, 48, 64).
-- Geçişler: 150–200 ms `ease-out`, yalnızca opaklık/konum. `prefers-reduced-motion`'a uy.
-- Boş durumlar: tek satır net açıklama + tek eylem butonu ("Bugün randevu yok. Plansız müşteri ekleyin.").
-- Hata mesajları: ne oldu + ne yapmalı, sade Türkçe ("Bu saat dolu. Lütfen başka bir saat seçin.").
+Inter, Poppins, Manrope, Plus Jakarta Sans gibi Google Fonts **yükleme**. Yalnızca sistem fontu kullan.
 
-**Anlaşılırlık:**
-- Her ekranda tek birincil eylem.
-- İkon tek başına kalmasın; önemli eylemlerde metin etiketi olsun.
-- 50+ yaşındaki bir berberin eğitim almadan kullanabileceği kadar basit: büyük dokunma alanları, kısa menüler, teknik terim yok.
+### 2. Yasak listesi
+
+Kodda aşağıdakilerden biri geçerse tasarım hatalı sayılır. Teslim etmeden önce kodu bu kelimeler için tara ve hepsini temizle:
+
+- **Tailwind sınıfları:** `bg-gradient-`, `from-`, `via-`, `to-` (gradyan), `bg-clip-text`, `text-transparent`, `backdrop-blur`, `blur-`, `shadow-md`, `shadow-lg`, `shadow-xl`, `shadow-2xl`, `rounded-2xl`, `rounded-3xl`, `animate-bounce`, `animate-pulse` (iskelet yükleme hariç), `animate-ping`, `ring-` ile parlama, `hover:scale-`, `hover:-translate-y`
+- **Renk adları:** purple, violet, indigo, fuchsia, pink, rose, cyan, teal, emerald, lime, sky, amber, orange, yellow. Bunlar config'te zaten olmayacak, inline style ile de yazma.
+- **Emoji:** arayüzde, bildirim metinlerinde ve SMS şablonlarında hiç olmayacak.
+- **İkonlar:** ✨ yıldız, sihirli değnek, roket, alev, taç, kupa yok. Renkli daire veya kare içinde ikon yok. İkon her zaman tek renk (`ink-2` ya da `accent`), 20px, 1.5 çizgi kalınlığında.
+- **Düzen kalıpları:**
+  - Ortalanmış dev başlık + altında iki buton olan "hero" bölümü
+  - "Neden biz?" ya da "Özellikler" diye 3'lü ikonlu kart ızgarası
+  - Müşteri yorumları ve yıldızlar
+  - Başlığın üstünde "Yeni" ya da "Beta" hap rozeti
+  - Dashboard'da trend oklu, yüzdeli renkli istatistik kartları
+  - Sol tarafta renkli ikonlu kalın sidebar
+  - Kart içinde kart
+  - Her şeyi kartlara sarmak (liste satırı gereken yerde liste satırı kullan)
+- **Metin dili:**
+  - Ünlem işareti yok.
+  - "Harika!", "Hadi başlayalım", "Saniyeler içinde", "Kolayca", "Akıllı", "Sorunsuz", "Mükemmel", "Yapay zekâ" yok.
+  - Pazarlama cümlesi yok.
+  - Buton metni fiil olacak ve 1–2 kelimeyi geçmeyecek: "Devam", "Onayla", "İptal Et", "Ara", "SMS Gönder".
+
+### 3. Bileşen ölçüleri
+
+| Bileşen | Kural |
+|---|---|
+| Birincil buton | `bg-accent text-white`, yükseklik 44px, `rounded-full`, yatay padding 22px, 17px/400. Hover'da yalnızca `bg-accent-hover`. Gölge ve kenarlık yok. |
+| İkincil buton | Zemin yok, `text-accent`, aynı yükseklik. Ya da `text-accent` düz metin bağlantısı. |
+| Tehlikeli eylem | Kırmızı zeminli buton yok. `text-danger` düz metin + onay sayfası (action sheet). |
+| Input | Yükseklik 44px, `bg-subtle`, kenarlık yok, `rounded` (12px), padding 0 14px. Focus'ta 2px `accent` outline, glow yok. Etiket input'un üstünde, 13px, `ink-2`. |
+| Liste | iOS Ayarlar tarzı: beyaz grup, satır yüksekliği en az 52px, satırlar arasında sol 16px girintili 0.5px `line` ayırıcı. Sağda `ink-3` renkli chevron. Grup arka planı `subtle`. |
+| Kart | Mümkünse kullanma. Gerekirse `bg-surface`, 1px `line-light` kenarlık, `rounded` (12px), gölge yok. |
+| Alt sayfa (sheet) | Mobilde alttan açılır, üst köşeler 12px, tutamaç çizgisi 36×5px `line`. Tek gölge `shadow-sheet`. Arka plan karartması `rgba(0,0,0,0.4)`, blur yok. |
+| Sekme çubuğu (mobil panel) | Altta 49px + safe-area. 4 sekme: Takvim, Müşteriler, Bildirimler, Ayarlar. Seçili ikon ve etiket `accent`, diğerleri `ink-3`. Etiket 10px. |
+| Üst başlık | iOS büyük başlık: 34px/700, sola hizalı, kaydırınca 17px/600 ortalanmış başlığa küçülür. Arka plan düz `bg`, alt kenarda 0.5px `line`. |
+| Durum etiketi | Hap rozet yok. Küçük 8px nokta + metin: `● Onaylandı`. Nokta durum renginde, metin `ink-2`. |
+| Toast | Altta ortada, `bg-ink text-bg`, 14px, `rounded` (12px), 3 saniye. "Geri Al" bağlantısı `accent` değil, kalın beyaz metin. |
+| Boşluklar | Yalnızca 4, 8, 12, 16, 20, 24, 32, 48. Sayfa yan boşluğu mobilde 16px, masaüstünde 24px. İçerik genişliği en fazla 980px. |
+| Animasyon | Yalnızca opaklık ve konum, 200ms, `cubic-bezier(0.25, 0.1, 0.25, 1)`. Sayfa açılışında giriş animasyonu yok. |
+
+### 4. Ekran ekran düzen
+
+**Müşteri: salon sayfası (`/s/{slug}`)**
+```
+┌──────────────────────────────┐
+│ [logo 40px]  Salon Adı       │  ← 17px/600, altında 15px ink-2 adres
+│ Kadıköy, İstanbul      [Ara] │  ← Ara: accent düz metin
+├──────────────────────────────┤
+│ Hizmet seçin                 │  ← 22px/600
+│ ┌──────────────────────────┐ │
+│ │ Saç Kesimi           ₺300│ │  ← liste satırı; sağda fiyat ink-2
+│ │ 30 dk                    │ │  ← 15px ink-3
+│ ├──────────────────────────┤ │
+│ │ Sakal                ₺150│ │
+│ └──────────────────────────┘ │
+│                              │
+│ [        Devam         ]     │  ← altta sabit, birincil buton
+└──────────────────────────────┘
+```
+- Hero, kapak fotoğrafı ya da slogan yok. İlk ekran doğrudan hizmet listesi.
+- Seçili satırın solunda `accent` onay işareti. Satırın arka planı değişmez.
+- Üstte ince adım göstergesi: "1 / 4", 13px `ink-3`. İlerleme çubuğu yok.
+
+**Müşteri: saat seçimi**
+- Gün şeridi: 7 gün yan yana. Her gün iki satır: kısa gün adı 13px `ink-3`, gün sayısı 20px. Seçili gün `accent` dolu daire içinde beyaz sayı. Bugün `accent` renkli sayı.
+- Saatler 4 sütunlu ızgara. Her saat 44px yükseklikte, `bg-subtle`, `rounded-sm`. Seçili saat `bg-accent text-white`. Dolu saatler hiç gösterilmez.
+- Boş saat yoksa tek satır: "Bu gün için boş saat yok." ve altında "Sonraki boş gün: Perşembe" bağlantısı.
+
+**Personel: takvim (ana ekran)**
+```
+┌─────────────────────────────────────┐
+│ Bugün                    [+] Ekle   │  ← büyük başlık; Ekle accent metin
+│ 14 Ekim Salı  ‹  ›                  │  ← 15px ink-2
+├──────┬──────────────────────────────┤
+│ 09:00│▍Ahmet Y. · Saç Kesimi       │  ← sol 3px personel renk çizgisi
+│      │▍09:00–09:30                  │     zemin subtle, yazı ink
+│ 09:30│                              │
+│ 10:00│▍Mehmet K. · Sakal   ● Geldi  │
+│ ─────┼──────────────────── 10:12 ── │  ← şu an çizgisi: 1px danger
+│ 10:30│                              │
+└──────┴──────────────────────────────┘
+│ Takvim  Müşteriler  Bildirim  Ayarlar│  ← sekme çubuğu
+```
+- Saat sütunu 56px genişliğinde, 13px `ink-3`, tabular-nums. Izgara çizgileri 0.5px `line-light`. 15 dakikalık çizgiler daha da soluk ya da hiç yok, yalnızca saat başları.
+- Randevu bloğu: `bg-subtle`, solda 3px personel rengi, `rounded-sm`. İçinde müşteri adı 15px/600, hizmet ve saat 13px `ink-2`. Gölge yok, renkli zemin yok.
+- Bloğa dokununca alttan sheet açılır. Sheet'te sırasıyla: müşteri adı (büyük), telefon, hizmet, saat. Altında tek sıra halinde 4 eylem: Ara, SMS, Taşı, İptal. Her eylem 24px ikon üstte, 12px etiket altta, renk `accent`; İptal `danger`.
+- Masaüstünde personel sütunları yan yana. Sütun başlığında yalnızca personel adı 15px/600. Avatar fotoğrafı yok, baş harf dairesi de yok.
+
+**Personel: giriş**
+- Ekranın ortasında, en fazla 360px genişlikte: salon logosu (yoksa salon adı 22px/600), 3 input (Salon kodu, Kullanıcı adı, Şifre), birincil "Giriş" butonu tam genişlikte.
+- Arka plan düz `bg`. İllüstrasyon, desen veya fotoğraf yok.
+
+**Yönetici: raporlar**
+- Rakamlar düz metin satırları: "Bu hafta 142 randevu" (sayı 28px/600 tabular-nums, açıklama 15px `ink-2`). Renkli kart, ok veya yüzde rozeti yok.
+- Grafik gerekiyorsa tek renk (`accent`) ince çubuklar. Eksen çizgileri `line-light`, etiketler 12px `ink-3`. Grafik kütüphanesi kullanma, SVG ile çiz.
+
+### 5. Referans duygu
+
+Bir ekranı bitirdiğinde kendine şunu sor: "Bu ekran iPhone'daki Takvim, Saat veya Ayarlar uygulamasının içinde olsa yadırganır mı?" Yadırganıyorsa sadeleştir. Renk yalnızca üç yerde kullanılır:
+- tıklanabilir şeyler (`accent`)
+- durum noktaları
+- personel çizgisi
+
+Geri kalan her şey siyah, beyaz ve gri.
+
+### 6. Teslimden önce kontrol
+
+Her aşamanın sonunda şu iki komutu çalıştırmış gibi kontrol et ve sonucunu yaz. Çıktı boş değilse düzelt:
+```
+grep -rnE "gradient|from-|via-|to-[a-z]|backdrop-blur|shadow-(md|lg|xl|2xl)|rounded-(2xl|3xl)|purple|violet|indigo|pink|fuchsia|emerald|cyan|teal" app src components
+grep -rnP "[\x{1F300}-\x{1FAFF}\x{2728}]" app src components
+```
 
 ---
 
