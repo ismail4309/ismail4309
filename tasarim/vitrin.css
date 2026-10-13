@@ -1,0 +1,145 @@
+/* Müşteri vitrin sitesi (salon ana sayfası) — şablonlar.
+   style.css'ten sonra yüklenir. Şablon <body> sınıfıyla seçilir:
+   .t-klasik  .t-galeri  .t-sade
+   İşletme rengi --brand değişkeniyle verilir (yalnızca izinli 6 renkten biri). */
+
+:root { --brand: #0071E3; --tile: #F5F5F7; --tile-ink: #1D1D1F; --tile-ink-2: #6E6E73; }
+
+.v-nav {
+  position: sticky; top: 0; z-index: 10;
+  height: 48px; background: #FBFBFD; border-bottom: 0.5px solid var(--border-light);
+}
+.v-nav__in { max-width: 1024px; margin: 0 auto; padding: 0 16px; height: 100%; display: flex; align-items: center; gap: 28px; font-size: 13px; }
+.v-nav__logo { font-size: 17px; font-weight: 600; color: var(--text); margin-right: auto; letter-spacing: -0.02em; }
+.v-nav__link { color: var(--text); opacity: 0.85; }
+.v-nav__cta { background: var(--brand); color: #fff; border-radius: 980px; padding: 5px 14px; font-size: 13px; }
+
+.v-wrap { max-width: 1024px; margin: 0 auto; padding: 0 16px; }
+
+/* Görsel yeri: gerçek fotoğraf yüklenmezse gri kutu + açıklama görünür */
+.ph { position: relative; background: #E8E8ED; overflow: hidden; }
+.ph::after {
+  content: attr(data-label);
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; text-align: center;
+  padding: 16px; font-size: 13px; color: #86868B;
+}
+.ph img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; }
+
+/* Apple tarzı tam genişlik bölüm (tile) */
+.tile { background: var(--tile); color: var(--tile-ink); text-align: center; padding: 56px 0 0; overflow: hidden; }
+.tile + .tile { margin-top: 12px; }
+.tile--white { --tile: #FFFFFF; }
+.tile--dark { --tile: #000000; --tile-ink: #F5F5F7; --tile-ink-2: #A1A1A6; }
+.tile__eyebrow { font-size: 17px; font-weight: 600; color: var(--tile-ink-2); margin: 0 0 6px; }
+.tile__h { font-size: 56px; line-height: 1.07; font-weight: 600; letter-spacing: -0.005em; margin: 0; }
+.tile__sub { font-size: 28px; line-height: 1.14; font-weight: 400; margin: 8px 0 0; }
+.tile__links { display: flex; justify-content: center; gap: 28px; margin: 20px 0 0; font-size: 21px; }
+.tile__links a { color: var(--brand); }
+.tile--dark .tile__links a { color: #2997FF; }
+.tile__btn { background: var(--brand); color: #fff; border-radius: 980px; padding: 11px 22px; font-size: 17px; }
+.tile__img { margin: 40px auto 0; max-width: 1024px; aspect-ratio: 16 / 7; }
+.tile__img--bleed { max-width: none; aspect-ratio: 21 / 8; }
+
+/* Bölüm başlığı (sola hizalı, Apple "Store" sayfası gibi) */
+.sec { padding: 72px 0 0; }
+.sec__h { font-size: 40px; line-height: 1.1; font-weight: 600; margin: 0 0 8px; letter-spacing: -0.01em; }
+.sec__h span { color: var(--text-2); }
+.sec__more { font-size: 17px; color: var(--brand); }
+.sec__head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin-bottom: 24px; }
+
+/* Yatay kaydırılan kart şeridi */
+.rail { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(260px, 1fr); gap: 20px; overflow-x: auto; padding-bottom: 8px; scrollbar-width: none; }
+.card {
+  background: var(--surface); border-radius: 18px; overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  display: flex; flex-direction: column;
+}
+.card .ph { aspect-ratio: 4 / 3; }
+.card__b { padding: 18px 20px 22px; display: flex; flex-direction: column; gap: 4px; flex: 1; }
+.card__t { font-size: 21px; font-weight: 600; }
+.card__m { font-size: 15px; color: var(--text-2); }
+.card__p { font-size: 17px; margin-top: 8px; font-variant-numeric: tabular-nums; }
+.card__a { margin-top: auto; padding-top: 12px; color: var(--brand); font-size: 15px; }
+
+/* Ekip */
+.team { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+.member .ph { aspect-ratio: 3 / 4; border-radius: 18px; }
+.member__n { font-size: 17px; font-weight: 600; margin: 12px 0 0; }
+.member__r { font-size: 15px; color: var(--text-2); margin: 2px 0 0; }
+.member__a { font-size: 15px; color: var(--brand); }
+
+/* Galeri */
+.gallery { display: grid; grid-template-columns: 2fr 1fr 1fr; grid-template-rows: 220px 220px; gap: 12px; }
+.gallery .ph { border-radius: 18px; }
+.gallery .ph:first-child { grid-row: span 2; }
+
+/* Bilgi */
+.info { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.info__box { background: var(--bg-subtle); border-radius: 18px; padding: 28px; }
+.info__box h3 { font-size: 21px; font-weight: 600; margin: 0 0 16px; }
+.hours { width: 100%; border-collapse: collapse; font-size: 17px; }
+.hours td { padding: 8px 0; border-top: 0.5px solid var(--border); }
+.hours tr:first-child td { border-top: 0; }
+.hours td:last-child { text-align: right; color: var(--text-2); font-variant-numeric: tabular-nums; }
+.hours .today td { font-weight: 600; color: var(--text); }
+.info .ph { border-radius: 12px; aspect-ratio: 16 / 9; margin: 16px 0; }
+
+.v-foot { margin-top: 72px; background: var(--bg-subtle); font-size: 12px; color: var(--text-2); }
+.v-foot__in { max-width: 1024px; margin: 0 auto; padding: 20px 16px 96px; display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+
+.v-sticky { display: none; }
+
+/* ---- Şablon: Galeri (fotoğraf ağırlıklı, koyu açılış) ---- */
+.t-galeri .hero { --tile: #000; --tile-ink: #F5F5F7; --tile-ink-2: #A1A1A6; position: relative; padding: 0; text-align: left; }
+.t-galeri .hero .tile__img { margin: 0; max-width: none; aspect-ratio: auto; height: 640px; background: #2C2C2E; }
+.t-galeri .hero .ph::after { color: #8E8E93; }
+.t-galeri .hero__txt { position: absolute; left: 0; right: 0; bottom: 0; z-index: 2; padding: 0 0 56px; background: linear-gradient(to top, rgba(0,0,0,0.55), rgba(0,0,0,0)); }
+.t-galeri .hero__txt .v-wrap { padding-top: 120px; }
+.t-galeri .hero .tile__links { justify-content: flex-start; }
+
+/* ---- Şablon: Sade (yazı ağırlıklı, küçük görseller) ---- */
+.t-sade .tile__h { font-size: 48px; }
+.t-sade .tile { text-align: left; padding: 72px 0 56px; }
+.t-sade .tile__links { justify-content: flex-start; }
+.t-sade .split { display: grid; grid-template-columns: 1.1fr 1fr; gap: 48px; align-items: center; }
+.t-sade .split .ph { aspect-ratio: 4 / 5; border-radius: 18px; }
+.t-sade .svc-list { border-top: 0.5px solid var(--border); }
+.t-sade .svc { display: grid; grid-template-columns: 1fr auto auto; gap: 24px; padding: 18px 0; border-bottom: 0.5px solid var(--border); align-items: baseline; }
+.t-sade .svc__n { font-size: 21px; }
+.t-sade .svc__d { font-size: 15px; color: var(--text-2); }
+.t-sade .svc__p { font-size: 17px; font-variant-numeric: tabular-nums; }
+
+@media (max-width: 734px) {
+  .v-nav__link { display: none; }
+  .tile { padding-top: 40px; }
+  .tile__h { font-size: 36px; }
+  .tile__sub { font-size: 21px; }
+  .tile__links { font-size: 17px; gap: 20px; }
+  .tile__img { aspect-ratio: 4 / 3; margin-top: 28px; }
+  .tile__img--bleed { aspect-ratio: 4 / 3; }
+  .sec { padding-top: 48px; }
+  .sec__h { font-size: 28px; }
+  .rail { grid-auto-columns: 78%; }
+  .team { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .gallery { grid-template-columns: 1fr 1fr; grid-template-rows: 160px 160px 160px; }
+  .gallery .ph:first-child { grid-column: span 2; grid-row: auto; }
+  .info { grid-template-columns: 1fr; }
+  .v-sticky {
+    display: flex; position: fixed; left: 0; right: 0; bottom: 0; z-index: 20;
+    background: #FFFFFF; border-top: 0.5px solid var(--border);
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom)); align-items: center; gap: 12px;
+  }
+  .v-sticky__t { flex: 1; font-size: 13px; color: var(--text-2); }
+  .v-sticky__t strong { display: block; font-size: 15px; color: var(--text); }
+  .v-sticky a { background: var(--brand); color: #fff; border-radius: 980px; padding: 10px 20px; font-size: 15px; }
+  .t-galeri .hero .tile__img { height: 560px; }
+  .t-sade .split { grid-template-columns: 1fr; gap: 28px; }
+  .t-sade .tile__h { font-size: 34px; }
+}
+
+/* Düzeltmeler */
+.tile__links a.tile__btn, .t-galeri .tile__links a.tile__btn { color: #fff; }
+.card { color: var(--text); }
+.tile__h--m { font-size: 48px; }
+.sec__more { white-space: nowrap; }
+@media (max-width: 734px) { .tile__h--m { font-size: 32px; } }

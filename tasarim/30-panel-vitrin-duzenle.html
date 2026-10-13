@@ -1,0 +1,86 @@
+<!doctype html><html lang="tr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Site Düzenleyici</title><link rel="stylesheet" href="style.css">
+<style>
+  .ed { display: grid; grid-template-columns: 400px 1fr; height: 100vh; }
+  .ed__side { background: var(--bg-subtle); overflow-y: auto; padding: 0 16px 120px; border-right: 0.5px solid var(--border); }
+  .ed__top { display: flex; align-items: center; justify-content: space-between; height: 56px; }
+  .ed__top h1 { font-size: 22px; font-weight: 600; margin: 0; }
+  .ed__prev { background: #E8E8ED; display: flex; flex-direction: column; }
+  .ed__bar { height: 56px; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 13px; color: var(--text-2); }
+  .seg { display: inline-flex; background: #fff; border-radius: 8px; padding: 2px; }
+  .seg span { padding: 4px 14px; border-radius: 6px; font-size: 13px; }
+  .seg .on { background: var(--bg-subtle); font-weight: 600; color: var(--text); }
+  .ed__frame { flex: 1; margin: 0 24px 24px; background: #fff; border-radius: 12px; overflow: hidden; border: 0.5px solid var(--border); }
+  .ed__frame iframe { width: 100%; height: 100%; border: 0; }
+  .tpl { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .tpl__i { background: #fff; border-radius: 12px; padding: 8px; border: 2px solid transparent; font-size: 13px; text-align: center; }
+  .tpl__i--on { border-color: var(--accent); }
+  .tpl__thumb { height: 72px; border-radius: 6px; background: #F5F5F7; margin-bottom: 6px; display: flex; flex-direction: column; gap: 4px; padding: 8px; }
+  .tpl__thumb i { display: block; height: 6px; border-radius: 2px; background: #D2D2D7; }
+  .tpl__thumb b { display: block; flex: 1; border-radius: 3px; background: #C7C7CC; }
+  .sw { display: flex; gap: 12px; padding: 14px 16px; }
+  .sw span { width: 32px; height: 32px; border-radius: 50%; position: relative; }
+  .sw .on::after { content: ""; position: absolute; inset: -4px; border-radius: 50%; border: 2px solid var(--accent); }
+  .toggle { width: 51px; height: 31px; border-radius: 16px; background: var(--success); position: relative; flex: none; }
+  .toggle::after { content: ""; position: absolute; top: 2px; right: 2px; width: 27px; height: 27px; border-radius: 50%; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
+  .toggle--off { background: #E9E9EA; }
+  .toggle--off::after { right: auto; left: 2px; }
+  .grip { color: var(--text-3); font-size: 18px; width: 16px; }
+  .photos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; padding: 12px 16px 16px; }
+  .photos div { aspect-ratio: 1; border-radius: 8px; background: #E8E8ED; display: flex; align-items: flex-end; justify-content: center; font-size: 11px; color: var(--text-2); padding: 6px; text-align: center; }
+  .photos .add { background: #fff; border: 1px dashed var(--border); color: var(--accent); align-items: center; font-size: 13px; }
+</style></head>
+<body><div class="ed">
+<aside class="ed__side">
+  <div class="ed__top"><h1>Site</h1><a class="btn" href="#" style="height:32px;padding:0 16px;font-size:15px">Yayınla</a></div>
+
+  <div class="section-label" style="margin-top:8px">Şablon</div>
+  <div class="tpl">
+    <div class="tpl__i tpl__i--on"><div class="tpl__thumb"><i style="width:60%;margin:0 auto"></i><i style="width:40%;margin:0 auto"></i><b></b></div>Klasik</div>
+    <div class="tpl__i"><div class="tpl__thumb" style="background:#2C2C2E"><b style="background:#48484A"></b><i style="width:50%;background:#636366"></i></div>Galeri</div>
+    <div class="tpl__i"><div class="tpl__thumb" style="flex-direction:row"><span style="flex:1;display:flex;flex-direction:column;gap:4px;justify-content:center"><i></i><i style="width:70%"></i></span><b style="flex:0 0 40%"></b></div>Sade</div>
+  </div>
+
+  <div class="section-label">Marka rengi</div>
+  <div class="list"><div class="sw">
+    <span class="on" style="background:#0071E3" title="Mavi"></span>
+    <span style="background:#1E3A5F" title="Lacivert"></span>
+    <span style="background:#2F5D50" title="Orman"></span>
+    <span style="background:#7A2E39" title="Bordo"></span>
+    <span style="background:#3A3A3C" title="Grafit"></span>
+    <span style="background:#6B4E3D" title="Kahve"></span>
+  </div></div>
+  <p class="caption">Butonlar ve bağlantılar bu renkte görünür.</p>
+
+  <div class="section-label">Bilgiler</div>
+  <ul class="list">
+    <li class="row"><div class="row__main row__title">Logo</div><span class="row__value">kuzey.svg</span><span class="chev">›</span></li>
+    <li class="row"><div class="row__main row__title">Salon adı</div><span class="row__value">Kuzey Berber</span><span class="chev">›</span></li>
+    <li class="row"><div class="row__main row__title">Üst başlık</div><span class="row__value">Kadıköy · 2012'den beri</span><span class="chev">›</span></li>
+    <li class="row"><div class="row__main row__title">Alt yazı</div><span class="row__value">Otomatik: en yakın boş saat</span><span class="chev">›</span></li>
+  </ul>
+
+  <div class="section-label">Bölümler</div>
+  <ul class="list">
+    <li class="row"><span class="grip">≡</span><div class="row__main row__title">Açılış</div><div class="toggle"></div></li>
+    <li class="row"><span class="grip">≡</span><div class="row__main"><div class="row__title">Duyuru</div><div class="row__meta">Sakal bakımı</div></div><div class="toggle"></div></li>
+    <li class="row"><span class="grip">≡</span><div class="row__main row__title">Hizmetler</div><div class="toggle"></div></li>
+    <li class="row"><span class="grip">≡</span><div class="row__main row__title">Ekip</div><div class="toggle"></div></li>
+    <li class="row"><span class="grip">≡</span><div class="row__main row__title">Galeri</div><div class="toggle"></div></li>
+    <li class="row"><span class="grip">≡</span><div class="row__main row__title">Saatler ve konum</div><div class="toggle"></div></li>
+    <li class="row"><span class="grip">≡</span><div class="row__main row__title">Sık sorulan sorular</div><div class="toggle toggle--off"></div></li>
+  </ul>
+  <p class="caption">Sıralamak için ≡ işaretinden tutup sürükleyin.</p>
+
+  <div class="section-label">Fotoğraflar</div>
+  <div class="list"><div class="photos">
+    <div>Açılış</div><div>Duyuru</div><div>Galeri 1</div><div>Galeri 2</div><div>Galeri 3</div><div class="add">+ Ekle</div>
+  </div></div>
+  <p class="caption">Fotoğraf yüklemezseniz şablonun hazır fotoğrafları kullanılır. Yüklenen fotoğraflar otomatik kırpılır ve küçültülür.</p>
+</aside>
+<section class="ed__prev">
+  <div class="ed__bar"><div class="seg"><span class="on">Masaüstü</span><span>Telefon</span></div></div>
+  <div class="ed__frame"><iframe src="20-vitrin-klasik.html" title="Önizleme"></iframe></div>
+</section>
+</div></body></html>
