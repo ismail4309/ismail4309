@@ -178,9 +178,37 @@ Sık kullanılan sorgular için indeksler: (salon_id, başlangıç), (staff_id, 
 
 Bu bölüm önerilerden oluşmuyor; hepsi zorunlu. Amaç: uygulama apple.com/tr, bir banka uygulaması ya da iOS'un kendi Takvim ve Ayarlar ekranları gibi görünsün. "Yapay zekâyla yapılmış bir SaaS şablonu" gibi görünmesin. Emin olmadığın her durumda daha sade, daha az renkli, daha az süslü olanı seç.
 
+### 0. Referans ekranlar — önce bunlara bak
+
+Bu mesaja `tasarim/` klasöründen şu dosyalar eklendi:
+- `style.css`
+- 7 HTML ekran: `01-musteri-salon`, `02-musteri-hizmet`, `03-musteri-saat`, `04-musteri-onay`, `10-panel-giris`, `11-panel-takvim`, `12-panel-randevu`
+- `ekran/` klasöründe bu ekranların görüntüleri
+
+Uygulamanın görünümü **bu ekranların aynısı** olacak:
+- `style.css` içindeki renkleri, ölçüleri ve sınıf yapısını aynen al. Next.js bileşenlerine çevirirken görünümü değiştirme.
+- Burada olmayan bir ekranı (müşteriler, ayarlar, raporlar vb.) yaparken de aynı parçaları kullan: gri zemin, beyaz liste grupları, mavi metin bağlantıları, tek mavi buton.
+- Kendi stil fikrini ekleme. Referansla senin fikrin çelişirse referans geçerli.
+
+**Bu bir berber uygulaması, ama berber gibi görünmeyecek.** Bir banka ya da Apple uygulaması gibi görünecek. Berber sitelerinin klişelerini kesinlikle kullanma:
+- Siyah zemin üstüne altın / gold / bronz / bakır renkler (`#D4AF37`, `#C9A227`, `#B8860B` ve benzerleri)
+- Koyu tema varsayılanı (koyu tema yalnızca telefon koyu moddaysa açılır)
+- Makas, ustura, bıyık, berber direği ikon veya illüstrasyonları
+- Serif ya da "vintage" başlık fontları (Playfair, Cinzel vb.)
+- Arka planda fotoğraf, tam ekran salon görseli, karartılmış fotoğraf üstüne yazı
+- "Premium", "Erkek bakımında yeni dönem", "Tarzını yansıt" gibi sloganlar
+
+Müşteri siteye girdiğinde ilk ekranda hizmet listesi, fiyatlar ya da "Saç / Sakal" kartları **görmeyecek**. İlk ekranda yalnızca şunlar olacak (bkz. `01-musteri-salon`):
+- Salon adı ve adresi
+- En yakın boş saat
+- Tek bir "Randevu Al" butonu
+- Telefon ve yol tarifi
+
+Hizmetler ancak "Randevu Al"a basınca gelir.
+
 ### 1. Hazır stil dosyası — aynen kullan
 
-Tasarım token'larını kendin uydurma. `app/globals.css` dosyasının başı birebir şu olacak:
+Tasarım token'larını kendin uydurma. `app/globals.css` dosyası `tasarim/style.css` ile aynı olacak. Token kısmı şudur:
 
 ```css
 :root {
@@ -302,26 +330,29 @@ Kodda aşağıdakilerden biri geçerse tasarım hatalı sayılır. Teslim etmede
 
 ### 4. Ekran ekran düzen
 
-**Müşteri: salon sayfası (`/s/{slug}`)**
+**Müşteri: salon sayfası (`/s/{slug}`)** — bkz. `01-musteri-salon.png`
 ```
 ┌──────────────────────────────┐
-│ [logo 40px]  Salon Adı       │  ← 17px/600, altında 15px ink-2 adres
-│ Kadıköy, İstanbul      [Ara] │  ← Ara: accent düz metin
-├──────────────────────────────┤
-│ Hizmet seçin                 │  ← 22px/600
+│                 Randevularım │  ← accent metin bağlantı
+│ Kuzey Berber                 │  ← 34px/700
+│ Moda Cad. No 18, Kadıköy     │  ← 15px ink-2
+│ RANDEVU                      │  ← 13px ink-2 grup etiketi
 │ ┌──────────────────────────┐ │
-│ │ Saç Kesimi           ₺300│ │  ← liste satırı; sağda fiyat ink-2
-│ │ 30 dk                    │ │  ← 15px ink-3
-│ ├──────────────────────────┤ │
-│ │ Sakal                ₺150│ │
+│ │ En yakın boş saat        │ │
+│ │ Bugün 14:30              │ │
+│ │ [      Randevu Al      ] │ │  ← tek birincil buton
 │ └──────────────────────────┘ │
-│                              │
-│ [        Devam         ]     │  ← altta sabit, birincil buton
+│ BİLGİ                        │
+│ ┌──────────────────────────┐ │
+│ │ Bugün açık   09:00–21:00 │ │
+│ │ Telefon   0216 333 00 00 │ │  ← tel: bağlantısı
+│ │ Yol tarifi             › │ │
+│ └──────────────────────────┘ │
 └──────────────────────────────┘
 ```
-- Hero, kapak fotoğrafı ya da slogan yok. İlk ekran doğrudan hizmet listesi.
-- Seçili satırın solunda `accent` onay işareti. Satırın arka planı değişmez.
-- Üstte ince adım göstergesi: "1 / 4", 13px `ink-3`. İlerleme çubuğu yok.
+- Hero, kapak fotoğrafı, slogan, hizmet listesi ve fiyat yok. Hizmetler "Randevu Al"dan sonraki ekranda (`02-musteri-hizmet.png`).
+- Hizmet ekranında seçili satırın solunda `accent` onay işareti. Satırın arka planı değişmez.
+- Üstte ince adım göstergesi: "1 / 3", 13px `ink-3`. İlerleme çubuğu yok.
 
 **Müşteri: saat seçimi**
 - Gün şeridi: 7 gün yan yana. Her gün iki satır: kısa gün adı 13px `ink-3`, gün sayısı 20px. Seçili gün `accent` dolu daire içinde beyaz sayı. Bugün `accent` renkli sayı.
